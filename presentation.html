@@ -1137,95 +1137,74 @@
       margin: 0 auto;
     }
 
-    /* ── NAVIGATION BAR ── */
-    #nav {
+    /* ── MINIMALIST NAVIGATION ── */
+    #top-nav {
       position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 24px;
+      right: 24px;
       display: flex;
-      align-items: center;
-      gap: 14px;
-      z-index: 100;
-      padding: 10px 20px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(90, 80, 65, .14);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, .5) inset;
+      gap: 6px;
+      z-index: 200;
+      opacity: .8;
+      transition: opacity .3s ease;
+    }
+
+    #top-nav:hover {
+      opacity: 1;
     }
 
     .nav-btn {
-      background: none;
-      border: 1px solid rgba(26, 107, 138, .3);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(26, 107, 138, .15);
       color: var(--accent);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all .2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+      backdrop-filter: blur(10px);
     }
 
     .nav-btn:hover {
-      background: rgba(26, 107, 138, .1);
+      background: var(--accent);
+      color: white;
       border-color: var(--accent);
-      transform: scale(1.05);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(26, 107, 138, .2);
     }
 
     .nav-btn:active {
-      transform: scale(.95);
-    }
-
-    #dots {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(90, 80, 65, .2);
-      cursor: pointer;
-      transition: all .3s cubic-bezier(.4, 0, .2, 1);
-    }
-
-    .dot:hover {
-      background: rgba(90, 80, 65, .4);
-      transform: scale(1.3);
-    }
-
-    .dot.active {
-      background: var(--accent);
-      width: 22px;
-      border-radius: 4px;
-      box-shadow: 0 0 8px rgba(26, 107, 138, .25);
+      transform: translateY(0);
     }
 
     #counter {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 14px;
       color: var(--muted);
-      min-width: 44px;
-      text-align: center;
-      font-weight: 500;
+      font-weight: 600;
+      z-index: 100;
+      letter-spacing: 1px;
+      opacity: .5;
     }
 
     /* ── KEYBOARD HINT ── */
     #hint {
       position: fixed;
-      top: 16px;
-      right: 22px;
-      font-size: 11px;
+      bottom: 24px;
+      right: 24px;
+      font-size: 10px;
       color: var(--muted);
       font-family: var(--mono);
-      opacity: .45;
+      opacity: .35;
       z-index: 10;
       font-weight: 500;
     }
@@ -1233,13 +1212,15 @@
     /* ── SLIDE NUMBER (top-left) ── */
     #slide-num {
       position: fixed;
-      top: 16px;
-      left: 22px;
+      top: 24px;
+      left: 24px;
       font-size: 11px;
       color: var(--muted);
       font-family: var(--mono);
       z-index: 10;
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: .5px;
+      opacity: .6;
     }
 
     .expand-btn {
@@ -1348,12 +1329,11 @@
     <div class="bg-left"></div>
     <div class="bg-right"></div>
     <div id="slides"></div>
-    <nav id="nav">
+    <div id="top-nav">
       <button class="nav-btn" id="prevBtn" title="Previous (←)">&#8592;</button>
-      <div id="dots"></div>
-      <span id="counter">1 / 13</span>
       <button class="nav-btn" id="nextBtn" title="Next (→)">&#8594;</button>
-    </nav>
+    </div>
+    <div id="counter">1 / 13</div>
     <div id="hint">← → to navigate &nbsp;·&nbsp; F11 fullscreen</div>
     <div id="slide-num"></div>
     <div id="progress-bar"></div>
@@ -1651,7 +1631,6 @@
 
     // ─── INIT ─────────────────────────────────────────────────
     const slidesEl = document.getElementById('slides');
-    const dotsEl = document.getElementById('dots');
     const counter = document.getElementById('counter');
     const slideNum = document.getElementById('slide-num');
     const progressBar = document.getElementById('progress-bar');
@@ -1659,21 +1638,14 @@
 
     SLIDES.forEach((s, i) => {
       slidesEl.insertAdjacentHTML('beforeend', renderSlide(s));
-      const dot = document.createElement('div');
-      dot.className = 'dot';
-      dot.addEventListener('click', () => goTo(i));
-      dotsEl.appendChild(dot);
     });
 
     const slideEls = document.querySelectorAll('.slide');
-    const dotEls = document.querySelectorAll('.dot');
 
     function goTo(idx) {
       slideEls[current].classList.remove('active');
-      dotEls[current].classList.remove('active');
       current = (idx + SLIDES.length) % SLIDES.length;
       slideEls[current].classList.add('active');
-      dotEls[current].classList.add('active');
       counter.textContent = `${current + 1} / ${SLIDES.length}`;
       slideNum.textContent = `Slide ${current + 1}`;
       // Update progress bar
