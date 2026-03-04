@@ -528,6 +528,21 @@
       border: 1px solid var(--border);
       box-shadow: 0 2px 14px rgba(0, 0, 0, .1);
       max-height: 300px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .process-image-col img:hover {
+      transform: scale(1.02);
+    }
+
+    .process-image-col img:fullscreen {
+      object-fit: contain;
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 0;
+      max-height: 100%;
+      border: none;
+      box-shadow: none;
     }
 
     .process-img-caption {
@@ -873,6 +888,13 @@
       justify-content: center;
       align-items: center;
     }
+
+    img:fullscreen {
+      object-fit: contain !important;
+      background: rgba(0, 0, 0, 0.8) !important;
+      max-height: 100% !important;
+      width: 100% !important;
+    }
   </style>
 
   <!-- Three.js & Loaders -->
@@ -983,8 +1005,9 @@
       let mediaCol = '';
       if (s.image) {
         mediaCol = `
-          <div class="process-image-col">
-            <img src="${s.image}" alt="${s.imageCaption || ''}" />
+          <div class="process-image-col" style="position:relative;">
+            <img src="${s.image}" alt="${s.imageCaption || ''}" onclick="toggleFullscreen(this)" />
+            <div style="position:absolute; top:8px; right:10px; font-size:10px; color:rgba(0,0,0,.6); background:rgba(255,255,255,0.8); padding:2px 6px; border-radius:4px; pointer-events:none; box-shadow:0 1px 3px rgba(0,0,0,0.2);">🔍 Click to expand</div>
             ${s.imageCaption ? `<div class="process-img-caption">${s.imageCaption}</div>` : ''}
           </div>`;
       } else if (s.stl) {
@@ -992,7 +1015,7 @@
           <div class="process-image-col">
             <div class="stl-viewer card" data-stl="${s.stl}" style="width:100%; height:300px; background:#e5e0d8; position:relative; overflow:hidden; cursor:grab; border-radius:10px; box-shadow:0 2px 14px rgba(0,0,0,.1);">
                <div style="position:absolute; top:8px; right:10px; font-size:10px; color:rgba(0,0,0,.4); z-index:2; background:rgba(255,255,255,0.5); padding:2px 6px; border-radius:4px; pointer-events:none;">3D Interactive Viewer</div>
-               <button class="expand-btn" onclick="toggleStlFullscreen(this, event)">⛶ Expand</button>
+               <button class="expand-btn" onclick="toggleFullscreen(this, event)">⛶ Expand</button>
             </div>
             ${s.stlCaption ? `<div class="process-img-caption">${s.stlCaption}</div>` : ''}
           </div>`;
@@ -1124,14 +1147,17 @@
     document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
     document.addEventListener('keydown', e => {
       /* Don't trigger slide change if user is in an input or if fullscreen */
-      if (document.fullscreenElement) return;
+      if (document.fullscreenElement) {
+        if (e.key === 'Escape') document.exitFullscreen();
+        return;
+      }
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
     });
 
-    function toggleStlFullscreen(btn, e) {
+    function toggleFullscreen(btn, e) {
       if (e) e.stopPropagation();
-      const container = btn.closest('.stl-viewer');
+      const container = btn.tagName === 'IMG' ? btn : btn.closest('.stl-viewer');
       if (!document.fullscreenElement) {
         container.requestFullscreen().catch(err => console.warn(err));
       } else {
