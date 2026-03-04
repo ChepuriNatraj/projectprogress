@@ -11,10 +11,10 @@ const SLIDES = [
         branch: "ELECTRONICS AND COMMUNICATION ENGINEERING",
         submittedByLabel: "SUBMITTED BY",
         team: [
-            { name: "BORA VISHNU SAI ABHINAV", reg: "Reg No: 321106512004" },
-            { name: "CHADARAM MAANAS", reg: "Reg No: 321106512005" },
-            { name: "CHEPURI NATRAJ", reg: "Reg No: 321106512006" },
-            { name: "MANNAVA SREE PARDHEEV KUMAR", reg: "Reg No: 321106512028" },
+            { name: "BORA VISHNU SAI ABHINAV", reg: "Reg No: 322106512004" },
+            { name: "CHADARAM MAANAS", reg: "Reg No: 322106512005" },
+            { name: "CHEPURI NATRAJ", reg: "Reg No: 322106512006" },
+            { name: "MANNAVA SREE PARDHEEV KUMAR", reg: "Reg No: 322106512028" },
         ],
         guideLabel: "UNDER THE ESTEEMED GUIDANCE OF",
         guide: "Prof. P. RAJESH KUMAR M.E., Ph.D.",
@@ -79,7 +79,16 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 4 — HARDWARE PROCUREMENT
+    // SLIDE 4 — SYSTEM DATA FLOW (Flowchart)
+    // ─────────────────────────────────────────────
+    {
+        type: "flowchart",
+        title: "System Data Flow & Architecture",
+        subtitle: "End-to-end signal path — from sensor input through processing to arm actuation",
+    },
+
+    // ─────────────────────────────────────────────
+    // SLIDE 5 — HARDWARE PROCUREMENT
     // ─────────────────────────────────────────────
     {
         type: "process",
@@ -110,21 +119,16 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 4b — HARDWARE REPRESENTATION (full page)
+    // SLIDE 6 — HARDWARE GALLERY
     // ─────────────────────────────────────────────
     {
-        type: "fullimage",
-        image: "Media/HARWARE REPRESENTAION.jpeg",
-        alt: "Physical Hardware and Edge Computing — System Diagram",
-    },
-
-    // ─────────────────────────────────────────────
-    // SLIDE 5c — ASSEMBLED ROBOT (full page)
-    // ─────────────────────────────────────────────
-    {
-        type: "fullimage",
-        image: "Media/ASSMEBLED.jpg",
-        alt: "Partially assembled 6-DOF robotic arm — real hardware build in progress",
+        type: "gallery",
+        title: "Hardware Build Progress",
+        subtitle: "From component kit to assembled prototype",
+        images: [
+            { src: "Media/WhatsApp Image 2026-03-04 at 4.24.13 PM.png", caption: "Simulation diagram" },
+            { src: "Media/ASSMEBLED.jpeg", caption: "Assembled 6-DOF robotic arm — mechanical build with servo motors mounted" },
+        ]
     },
 
     // ─────────────────────────────────────────────
@@ -171,7 +175,7 @@ const SLIDES = [
         title: "Phase 3 — Simulation in Gazebo & RViz",
         status: "completed",
         statusLabel: "✅ Completed",
-        image: "Media/RVIZ IMAGE OF MODEL.png",
+        image: "Media/RVIZ IMAGE OF MODEL.jpeg",
         imageCaption: "RViz visualisation — 6-DOF arm model rendered with colour-coded links and joint transforms confirmed",
         intro: "With a working URDF in place, the arm was loaded into both Gazebo Harmonic (physics simulation) and RViz (kinematic visualisation). This simulation environment is the primary testbed for validating motion logic before deploying to real hardware.",
         steps: [
