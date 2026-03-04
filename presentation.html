@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dual Mode Vision-Guided Robotic Arm — Progress Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
+  <style>
+    /* ── RESET ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Cream / Beige light palette — matching reference image */
+      --bg: #f0ebe3;
+      --bg2: #e8e0d4;
+      --panel: rgba(255, 255, 255, 0.72);
+      --panel2: rgba(255, 255, 255, 0.45);
+      --border: rgba(90, 80, 65, 0.15);
+      --border2: rgba(90, 80, 65, 0.08);
+
+      /* Accent colours taken from reference */
+      --accent: #1a6b8a;
+      /* deep teal */
+      --accent2: #c0392b;
+      /* heading red (from cover page) */
+      --accent3: #2ecc71;
+      /* green for submitted-by label */
+      --dark: #1c1a16;
+      /* almost-black charcoal headers */
+      --mid: #4a4035;
+      /* mid-tone body text */
+      --muted: #8a7d6e;
+      /* muted captions */
+      --orange: #d2691e;
+      /* warm orange accent */
+      --green: #2d6a4f;
+      /* dark green for completed items */
+
+      --r: 12px;
+      --font: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+
+      /* Angular sidebar gradient — colours "sink into the side" */
+      --side-grad: linear-gradient(160deg, #c8bfb0 0%, transparent 55%);
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--dark);
+      font-family: var(--font);
+    }
+
+    /* ── BACKGROUND ── */
+    #app {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Diagonal corner panels that "sink in" from the sides — inspired by reference image */
+    .bg-left {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 22%;
+      height: 100%;
+      background: linear-gradient(170deg, #c5bdb2 0%, #d8d0c5 40%, transparent 100%);
+      clip-path: polygon(0 0, 100% 0, 72% 100%, 0 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-right {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 22%;
+      height: 100%;
+      background: linear-gradient(190deg, transparent 0%, #ccc4b8 60%, #bab2a8 100%);
+      clip-path: polygon(28% 0, 100% 0, 100% 100%, 0 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-top-stripe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3));
+      z-index: 10;
+    }
+
+    /* ── SLIDES ── */
+    #slides {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 52px 80px 64px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(30px);
+      transition: opacity .5s cubic-bezier(.4, 0, .2, 1), transform .5s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    /* ── SHARED COMPONENTS ── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .card2 {
+      background: var(--panel2);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+    }
+
+    .slide-title {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 800;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 4px;
+      letter-spacing: -.3px;
+    }
+
+    .slide-title span {
+      color: var(--accent);
+    }
+
+    .slide-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+      border: 1px solid;
+      margin-bottom: 14px;
+    }
+
+    .badge.teal {
+      color: var(--accent);
+      border-color: rgba(26, 107, 138, .3);
+      background: rgba(26, 107, 138, .08);
+    }
+
+    .badge.green {
+      color: var(--green);
+      border-color: rgba(45, 106, 79, .3);
+      background: rgba(45, 106, 79, .08);
+    }
+
+    .badge.orange {
+      color: var(--orange);
+      border-color: rgba(210, 105, 30, .3);
+      background: rgba(210, 105, 30, .08);
+    }
+
+    .badge.red {
+      color: var(--accent2);
+      border-color: rgba(192, 57, 43, .3);
+      background: rgba(192, 57, 43, .07);
+    }
+
+    /* Stagger-in animation */
+    .stagger {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .4s ease, transform .4s ease;
+    }
+
+    .slide.active .stagger {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.active .stagger:nth-child(1) {
+      transition-delay: .08s
+    }
+
+    .slide.active .stagger:nth-child(2) {
+      transition-delay: .16s
+    }
+
+    .slide.active .stagger:nth-child(3) {
+      transition-delay: .24s
+    }
+
+    .slide.active .stagger:nth-child(4) {
+      transition-delay: .32s
+    }
+
+    .slide.active .stagger:nth-child(5) {
+      transition-delay: .40s
+    }
+
+    .slide.active .stagger:nth-child(6) {
+      transition-delay: .46s
+    }
+
+    /* ═══════════════════════════════════
+   TITLE SLIDE — Academic cover page
+═══════════════════════════════════ */
+    .title-slide {
+      gap: 0;
+      justify-content: center;
+    }
+
+    .cover-box {
+      width: 100%;
+      max-width: 860px;
+      text-align: center;
+      padding: 32px 48px 28px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(90, 80, 65, 0.12);
+      border-radius: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 4px 32px rgba(0, 0, 0, 0.07);
+    }
+
+    .cover-project-title {
+      font-size: clamp(18px, 2.4vw, 28px);
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -.2px;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .cover-report-line {
+      font-size: 13px;
+      color: var(--mid);
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .cover-degree {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--accent2);
+      margin-bottom: 2px;
+    }
+
+    .cover-in {
+      font-size: 14px;
+      color: var(--mid);
+      margin-bottom: 2px;
+    }
+
+    .cover-branch {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: 14px;
+    }
+
+    .cover-submitted-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #27ae60;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .cover-team {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto 14px;
+    }
+
+    .cover-team-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 4px 0;
+      color: var(--dark);
+      font-weight: 500;
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.07);
+    }
+
+    .cover-team-row:last-child {
+      border-bottom: none;
+    }
+
+    .cover-team-reg {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .cover-guide-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .cover-guide-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+
+    .cover-guide-title {
+      font-size: 12px;
+      color: var(--mid);
+      margin-bottom: 12px;
+    }
+
+    .cover-divider {
+      width: 60%;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.1);
+      margin: 10px auto;
+    }
+
+    .cover-dept {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .cover-college {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .cover-city {
+      font-size: 11px;
+      color: var(--mid);
+      margin-bottom: 2px;
+    }
+
+    .cover-year {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    /* ═══════════════════════════════════
+   ABSTRACT SLIDE
+═══════════════════════════════════ */
+    .abstract-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      width: 100%;
+      max-width: 1080px;
+    }
+
+    .abs-card {
+      padding: 20px 22px;
+    }
+
+    .abs-icon {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .abs-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--accent);
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    .abs-text {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--mid);
+    }
+
+    /* ═══════════════════════════════════
+   OVERVIEW SLIDE
+═══════════════════════════════════ */
+    .overview-tracks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      width: 100%;
+      max-width: 940px;
+      margin-bottom: 18px;
+    }
+
+    .track-card {
+      padding: 22px;
+    }
+
+    .track-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .track-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 15px;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+
+    .track-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .flow-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      font-family: var(--mono);
+      color: var(--accent);
+      padding: 11px 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(26, 107, 138, .2);
+      background: rgba(26, 107, 138, .06);
+      width: fit-content;
+    }
+
+    .flow-arrow {
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════════════
+   FULL IMAGE SLIDE
+═══════════════════════════════════ */
+    .fullimg-slide {
+      padding: 0 !important;
+    }
+
+    .fullimg-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ═══════════════════════════════════
+   PROCESS SLIDES
+═══════════════════════════════════ */
+    .process-layout {
+      width: 100%;
+      max-width: 1090px;
+      display: grid;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .process-layout.no-image {
+      grid-template-columns: 240px 1fr;
+    }
+
+    .process-layout.has-image {
+      grid-template-columns: 200px 1fr 260px;
+    }
+
+    .process-image-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .process-image-col img {
+      width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, .1);
+      max-height: 300px;
+    }
+
+    .process-img-caption {
+      font-size: 12.5px;
+      color: var(--muted);
+      text-align: center;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .process-intro {
+      padding: 20px 22px;
+    }
+
+    .intro-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .intro-text {
+      font-size: 15.5px;
+      line-height: 1.8;
+      color: var(--mid);
+    }
+
+    .outcome-box {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 10px;
+      background: rgba(45, 106, 79, .06);
+      border: 1px solid rgba(45, 106, 79, .2);
+      font-size: 14.5px;
+      color: #2d6a4f;
+      line-height: 1.6;
+    }
+
+    .outcome-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .steps-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .step-card {
+      padding: 14px 18px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 2px;
+      opacity: .65;
+    }
+
+    .step-heading {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .step-detail {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════════════
+   CHALLENGES SLIDE
+═══════════════════════════════════ */
+    .challenges-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      width: 100%;
+      max-width: 1040px;
+      margin-bottom: 14px;
+    }
+
+    .track-section {
+      padding: 20px 22px;
+    }
+
+    .track-col-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .check-item {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      font-size: 14.5px;
+      color: var(--mid);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .check-icon {
+      flex-shrink: 0;
+      font-size: 14.5px;
+      margin-top: 1px;
+    }
+
+    .section-divider {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--muted);
+      margin: 12px 0 9px;
+      font-weight: 600;
+    }
+
+    .key-challenge {
+      padding: 14px 20px;
+      border-radius: 10px;
+      max-width: 1040px;
+      width: 100%;
+      border: 1px solid rgba(210, 105, 30, .25);
+      background: rgba(210, 105, 30, .06);
+      font-size: 15px;
+      color: var(--orange);
+      line-height: 1.7;
+    }
+
+    .kc-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--orange);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    /* ═══════════════════════════════════
+   ROADMAP SLIDE
+═══════════════════════════════════ */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+      width: 100%;
+      max-width: 1080px;
+      margin-bottom: 14px;
+    }
+
+    .roadmap-card {
+      padding: 20px 16px;
+    }
+
+    .phase-id {
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: .5;
+      margin-bottom: 4px;
+      color: var(--dark);
+    }
+
+    .phase-label {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .phase-task {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 7px;
+      padding-left: 13px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .phase-task::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      opacity: .5;
+      font-size: 12px;
+      top: 1px;
+    }
+
+    .roadmap-note {
+      font-size: 14.5px;
+      color: var(--muted);
+      text-align: center;
+      font-style: italic;
+      max-width: 800px;
+    }
+
+    /* ═══════════════════════════════════
+   THANK YOU SLIDE
+═══════════════════════════════════ */
+    .thankyou-slide {
+      text-align: center;
+      gap: 12px;
+    }
+
+    .thankyou-title {
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .thankyou-subtitle {
+      font-size: 18px;
+      color: var(--mid);
+    }
+
+    /* ── NAVIGATION BAR ── */
+    #nav {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 100;
+      padding: 9px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(90, 80, 65, .18);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-btn {
+      background: none;
+      border: 1px solid rgba(26, 107, 138, .35);
+      color: var(--accent);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(26, 107, 138, .1);
+      border-color: var(--accent);
+    }
+
+    #dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(90, 80, 65, .22);
+      cursor: pointer;
+      transition: all .25s;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      width: 20px;
+      border-radius: 3px;
+    }
+
+    #counter {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    /* ── KEYBOARD HINT ── */
+    #hint {
+      position: fixed;
+      top: 16px;
+      right: 22px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+      opacity: .55;
+      z-index: 10;
+    }
+
+    /* ── SLIDE NUMBER (top-left) ── */
+    #slide-num {
+      position: fixed;
+      top: 16px;
+      left: 22px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+      z-index: 10;
+    }
+
+    .expand-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .expand-btn:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .stl-viewer:fullscreen {
+      background: #e5e0d8 !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+
+  <!-- Three.js & Loaders -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div class="bg-top-stripe"></div>
+    <div class="bg-left"></div>
+    <div class="bg-right"></div>
+    <div id="slides"></div>
+    <nav id="nav">
+      <button class="nav-btn" id="prevBtn" title="Previous (←)">&#8592;</button>
+      <div id="dots"></div>
+      <span id="counter">1 / 10</span>
+      <button class="nav-btn" id="nextBtn" title="Next (→)">&#8594;</button>
+    </nav>
+    <div id="hint">← → to navigate &nbsp;·&nbsp; F11 fullscreen</div>
+    <div id="slide-num"></div>
+  </div>
+
+  <script src="slides_data.js"></script>
+  <script>
+    // ─── RENDERERS ────────────────────────────────────────────
+
+    function renderTitle(s) {
+      const teamRows = s.team.map(m => `
+    <div class="cover-team-row">
+      <span>${m.name}</span>
+      <span class="cover-team-reg">${m.reg}</span>
+    </div>`).join('');
+      return `
+  <div class="slide title-slide">
+    <div class="cover-box stagger">
+      <div class="cover-project-title">${s.projectTitle}</div>
+      <div class="cover-report-line">${s.reportLine}</div>
+      <div class="cover-degree">${s.degree}</div>
+      <div class="cover-in">${s.inWord}</div>
+      <div class="cover-branch">${s.branch}</div>
+      <div class="cover-submitted-label">${s.submittedByLabel}</div>
+      <div class="cover-team">${teamRows}</div>
+      <div class="cover-guide-label">${s.guideLabel}</div>
+      <div class="cover-guide-name">${s.guide}</div>
+      <div class="cover-guide-title">${s.guideTitle}</div>
+      ${s.logoImage ? `<img src="${s.logoImage}" alt="Andhra University Logo" style="height:64px;width:auto;margin:6px auto 2px;display:block;" />` : ''}
+      <div class="cover-divider"></div>
+      <div class="cover-dept">${s.dept}</div>
+      <div class="cover-college">${s.college}</div>
+      <div class="cover-city">${s.city}</div>
+      <div class="cover-year">${s.year}</div>
+    </div>
+  </div>`;
+    }
+
+    function renderAbstract(s) {
+      return `
+  <div class="slide" style="gap:16px">
+    <div class="slide-title stagger">${s.title}</div>
+    <div class="abstract-grid stagger">
+      ${s.paragraphs.map(p => `
+        <div class="card abs-card">
+          <div class="abs-icon">${p.icon}</div>
+          <div class="abs-label">${p.label}</div>
+          <p class="abs-text">${p.text}</p>
+        </div>`).join('')}
+    </div>
+  </div>`;
+    }
+
+    function renderOverview(s) {
+      return `
+  <div class="slide" style="gap:14px">
+    <div class="slide-title stagger">${s.title}</div>
+    <p class="slide-subtitle stagger">${s.subtitle}</p>
+    <div class="overview-tracks stagger">
+      ${s.tracks.map(t => `
+        <div class="card track-card">
+          <div class="track-title" style="color:${t.color}">${t.name}</div>
+          ${t.items.map(i => `
+            <div class="track-item">
+              <span class="track-dot" style="background:${t.color}"></span>${i}
+            </div>`).join('')}
+        </div>`).join('')}
+    </div>
+    <div class="flow-bar stagger">
+      ${s.flowSteps.map((f, i) => i % 2 === 1 ? `<span class="flow-arrow">${f}</span>` : `<span>${f}</span>`).join('')}
+    </div>
+  </div>`;
+    }
+
+    function statusBadge(status, label) {
+      const cls = status === 'completed' ? 'green' : status === 'in-progress' ? 'orange' : 'teal';
+      return `<span class="badge ${cls}">${label}</span>`;
+    }
+
+    function renderFullImage(s) {
+      return `
+  <div class="slide fullimg-slide">
+    <img src="${s.image}" alt="${s.alt || ''}" />
+  </div>`;
+    }
+
+    function renderProcess(s) {
+      const hasImg = !!s.image || !!s.stl;
+      let mediaCol = '';
+      if (s.image) {
+        mediaCol = `
+          <div class="process-image-col">
+            <img src="${s.image}" alt="${s.imageCaption || ''}" />
+            ${s.imageCaption ? `<div class="process-img-caption">${s.imageCaption}</div>` : ''}
+          </div>`;
+      } else if (s.stl) {
+        mediaCol = `
+          <div class="process-image-col">
+            <div class="stl-viewer card" data-stl="${s.stl}" style="width:100%; height:300px; background:#e5e0d8; position:relative; overflow:hidden; cursor:grab; border-radius:10px; box-shadow:0 2px 14px rgba(0,0,0,.1);">
+               <div style="position:absolute; top:8px; right:10px; font-size:10px; color:rgba(0,0,0,.4); z-index:2; background:rgba(255,255,255,0.5); padding:2px 6px; border-radius:4px; pointer-events:none;">3D Interactive Viewer</div>
+               <button class="expand-btn" onclick="toggleStlFullscreen(this, event)">⛶ Expand</button>
+            </div>
+            ${s.stlCaption ? `<div class="process-img-caption">${s.stlCaption}</div>` : ''}
+          </div>`;
+      }
+      return `
+  <div class="slide" style="gap:10px; justify-content:flex-start; padding-top:36px">
+    <div class="stagger" style="display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div class="slide-title">${s.title}</div>
+      ${statusBadge(s.status, s.statusLabel)}
+    </div>
+    <div class="process-layout ${hasImg ? 'has-image' : 'no-image'} stagger">
+      <div>
+        <div class="card process-intro">
+          <div class="intro-label">📋 Overview</div>
+          <p class="intro-text">${s.intro}</p>
+        </div>
+        <div class="outcome-box">
+          <div class="outcome-label">✅ Outcome</div>
+          ${s.outcome}
+        </div>
+      </div>
+      <div class="steps-grid">
+        ${s.steps.map(st => `
+          <div class="card step-card">
+            <span class="step-num">${st.stepNum}</span>
+            <div>
+              <div class="step-heading">${st.heading}</div>
+              <p class="step-detail">${st.detail}</p>
+            </div>
+          </div>`).join('')}
+      </div>
+      ${mediaCol}
+    </div>
+  </div>`;
+    }
+
+    function renderChallenges(s) {
+      function col(data) {
+        const done = data.done.map(i => `<div class="check-item"><span class="check-icon">✅</span><span>${i}</span></div>`).join('');
+        const pend = data.pending.map(i => `<div class="check-item"><span class="check-icon">⏳</span><span>${i}</span></div>`).join('');
+        return `
+    <div class="card track-section">
+      <div class="track-col-title" style="color:${data.color}">${data.label}</div>
+      <div class="section-divider">Completed</div>${done}
+      <div class="section-divider">Pending</div>${pend}
+    </div>`;
+      }
+      return `
+  <div class="slide" style="gap:14px">
+    <div class="slide-title stagger">${s.title}</div>
+    <p class="slide-subtitle stagger">${s.subtitle}</p>
+    <div class="challenges-grid stagger">${col(s.hardwareTrack)}${col(s.softwareTrack)}</div>
+    <div class="key-challenge stagger">
+      <div class="kc-label">⚠️ Key Challenge</div>${s.keyChallenge}
+    </div>
+  </div>`;
+    }
+
+    function renderRoadmap(s) {
+      const bg = { next: 'rgba(45,106,79,.07)', upcoming: 'rgba(26,107,138,.07)', future: 'rgba(210,105,30,.06)' };
+      return `
+  <div class="slide" style="gap:14px">
+    <div class="slide-title stagger">${s.title}</div>
+    <p class="slide-subtitle stagger">${s.subtitle}</p>
+    <div class="roadmap-grid stagger">
+      ${s.phases.map(p => `
+        <div class="card roadmap-card" style="background:${bg[p.status] || 'var(--panel)'}; border-color:${p.color}44">
+          <div class="phase-id">${p.id}</div>
+          <div class="phase-label" style="color:${p.color}">${p.label}</div>
+          ${p.tasks.map(t => `<div class="phase-task">${t}</div>`).join('')}
+        </div>`).join('')}
+    </div>
+    <p class="roadmap-note stagger">${s.note}</p>
+  </div>`;
+    }
+
+    function renderThankYou(s) {
+      return `
+  <div class="slide thankyou-slide">
+    <div class="thankyou-title stagger">${s.title}</div>
+    <div class="thankyou-subtitle stagger" style="color:var(--accent)">Thank you for your time and attention.</div>
+  </div>`;
+    }
+
+    function renderSlide(s) {
+      switch (s.type) {
+        case 'title': return renderTitle(s);
+        case 'abstract': return renderAbstract(s);
+        case 'overview': return renderOverview(s);
+        case 'process': return renderProcess(s);
+        case 'challenges': return renderChallenges(s);
+        case 'roadmap': return renderRoadmap(s);
+        case 'fullimage': return renderFullImage(s);
+        case 'thankyou': return renderThankYou(s);
+        default: return `<div class="slide"><p>Unknown: ${s.type}</p></div>`;
+      }
+    }
+
+    // ─── INIT ─────────────────────────────────────────────────
+    const slidesEl = document.getElementById('slides');
+    const dotsEl = document.getElementById('dots');
+    const counter = document.getElementById('counter');
+    const slideNum = document.getElementById('slide-num');
+    let current = 0;
+
+    SLIDES.forEach((s, i) => {
+      slidesEl.insertAdjacentHTML('beforeend', renderSlide(s));
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.addEventListener('click', () => goTo(i));
+      dotsEl.appendChild(dot);
+    });
+
+    const slideEls = document.querySelectorAll('.slide');
+    const dotEls = document.querySelectorAll('.dot');
+
+    function goTo(idx) {
+      slideEls[current].classList.remove('active');
+      dotEls[current].classList.remove('active');
+      current = (idx + SLIDES.length) % SLIDES.length;
+      slideEls[current].classList.add('active');
+      dotEls[current].classList.add('active');
+      counter.textContent = `${current + 1} / ${SLIDES.length}`;
+      slideNum.textContent = `Slide ${current + 1}`;
+    }
+
+    goTo(0);
+    document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+    document.addEventListener('keydown', e => {
+      /* Don't trigger slide change if user is in an input or if fullscreen */
+      if (document.fullscreenElement) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+    });
+
+    function toggleStlFullscreen(btn, e) {
+      if (e) e.stopPropagation();
+      const container = btn.closest('.stl-viewer');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(err => console.warn(err));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.stl-viewer').forEach(v => {
+          if (v._resizeStl) v._resizeStl();
+          const btn = v.querySelector('.expand-btn');
+          if (btn) btn.innerHTML = document.fullscreenElement === v ? '✖ Close' : '⛶ Expand';
+        });
+      }, 50);
+    });
+
+    // ─── STL VIEWERS INIT ─────────────────────────────────────
+    const stlViewers = document.querySelectorAll('.stl-viewer');
+    stlViewers.forEach(container => {
+      const file = container.getAttribute('data-stl');
+      if (!file) return;
+
+      const w = container.clientWidth || 260;
+      const h = container.clientHeight || 300;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+      camera.position.set(0, 50, 200);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(w, h);
+      renderer.setClearColor(0x000000, 0); // Transparent to show container color
+      container.appendChild(renderer.domElement);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight.position.set(100, 150, 50);
+      scene.add(dirLight);
+
+      const loader = new THREE.STLLoader();
+      loader.load(file, geometry => {
+        const material = new THREE.MeshPhongMaterial({ color: 0x4a4035, specular: 0x111111, shininess: 50 });
+        const mesh = new THREE.Mesh(geometry, material);
+
+        geometry.computeBoundingBox();
+        const center = new THREE.Vector3();
+        geometry.boundingBox.getCenter(center);
+        mesh.position.sub(center);
+
+        const wrapper = new THREE.Group();
+        wrapper.add(mesh);
+
+        const box = new THREE.Box3().setFromObject(wrapper);
+        const size = box.getSize(new THREE.Vector3()).length();
+        const scale = 140 / size;
+        wrapper.scale.set(scale, scale, scale);
+        // rotate to a nice isometric view init
+        wrapper.rotation.set(-Math.PI / 2, 0, Math.PI / 4);
+
+        scene.add(wrapper);
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      function resize() {
+        // give dom time to layout properly, especially exiting fullscreen
+        queueMicrotask(() => {
+          const cw = container.clientWidth || 260;
+          const ch = container.clientHeight || 300;
+          camera.aspect = cw / ch;
+          camera.updateProjectionMatrix();
+          renderer.setSize(cw, ch);
+        });
+      }
+      window.addEventListener('resize', resize);
+      container._resizeStl = resize;
+    });
+  </script>
+</body>
+
+</html>
