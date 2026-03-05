@@ -34,22 +34,22 @@ const SLIDES = [
         title: "Abstract",
         paragraphs: [
             {
-                icon: "🎯",
+                icon: "goal",
                 label: "Objective",
                 text: "This project aims to design and develop a six-degree-of-freedom (6-DOF) robotic arm system capable of operating in two parallel modes: autonomous object sorting driven by computer vision, and direct human-in-the-loop control via gesture recognition. The system is engineered to transition seamlessly between these two modes without physical intervention."
             },
             {
-                icon: "🏗️",
+                icon: "architecture",
                 label: "Architecture",
                 text: "The hardware platform comprises a 6-DOF metal servo arm actuated by six MG996R servo motors, controlled by an ESP8266 microcontroller. An IMU sensor provides real-time orientation and motion feedback to improve control stability. On the software side, the system is built on ROS2 Jazzy with Gazebo Harmonic for physics-accurate simulation, RViz for visualisation, and a YOLO-based vision pipeline for hand and object detection."
             },
             {
-                icon: "📊",
+                icon: "progress",
                 label: "Progress",
                 text: "Key milestones achieved to date include: (1) procurement of all primary hardware components; (2) development of a custom URDF/3D model after extensive iterative adaptation of an existing open-source reference; (3) successful simulation of the arm in both Gazebo and RViz environments; (4) initial implementation of servo motor control logic on the ESP8266; and (5) a preliminary integration attempt of a YOLO-based hand-detection module, which is currently under active debugging."
             },
             {
-                icon: "🔬",
+                icon: "significance",
                 label: "Significance",
                 text: "Development is progressing along two concurrent tracks — hardware implementation and software/simulation development — allowing each track to be validated independently before full-system integration. This structured approach reduces integration risk and provides a stable, testable prototype at each phase of the project lifecycle."
             },
@@ -94,7 +94,7 @@ const SLIDES = [
         type: "process",
         title: "Phase 1 — Hardware Procurement",
         status: "completed",
-        statusLabel: "✅ Completed",
+        statusLabel: "Completed",
         image: "Media/UNASSEMBLED ROBOTIC MODEL.jpeg",
         imageCaption: "Received hardware kit — arm brackets, 6× MG996R servos, claw gripper, servo horns",
         intro: "All primary hardware components required for the robotic arm build were ordered and received. Component selection was finalised based on torque requirements, availability, and compatibility with the ESP8266 control architecture.",
@@ -119,26 +119,35 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 6 — HARDWARE GALLERY
+    // SLIDE 6 — HARDWARE REPRESENTATION
+    // ─────────────────────────────────────────────
+    {
+        type: "fullimage",
+        image: "Media/HARWARE REPRESENTAION.png",
+        alt: "Hardware representation of the robotic arm components"
+    },
+
+    // ─────────────────────────────────────────────
+    // SLIDE 7 — HARDWARE GALLERY
     // ─────────────────────────────────────────────
     {
         type: "gallery",
         title: "Hardware Build Progress",
         subtitle: "From component kit to assembled prototype",
         images: [
-            { src: "Media/WhatsApp Image 2026-03-04 at 4.24.13 PM.png", caption: "Simulation diagram" },
             { src: "Media/ASSMEBLED.jpeg", caption: "Assembled 6-DOF robotic arm — mechanical build with servo motors mounted" },
+            { src: "Media/WhatsApp Image 2026-03-04 at 4.24.13 PM.png", caption: "Simulation coordinate mapping diagram" },
         ]
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 5 — 3D MODEL & URDF
+    // SLIDE 8 — 3D MODEL & URDF
     // ─────────────────────────────────────────────
     {
         type: "process",
         title: "Phase 2 — 3D Model & URDF Development",
         status: "completed",
-        statusLabel: "✅ Completed (After Multiple Iterations)",
+        statusLabel: "Completed (Iterative Adaptation)",
         stl: "full_assembly.stl",
         stlCaption: "Interactive 3D representation of the assembled CAD model (Drag to rotate, Scroll to zoom)",
         intro: "A robot description file (URDF) is mandatory for simulation in Gazebo and visualisation in RViz. Because no pre-existing URDF matched our exact arm hardware, one had to be created from scratch using an adapted reference.",
@@ -168,13 +177,13 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 6 — SIMULATION
+    // SLIDE 9 — SIMULATION
     // ─────────────────────────────────────────────
     {
         type: "process",
         title: "Phase 3 — Simulation in Gazebo & RViz",
         status: "completed",
-        statusLabel: "✅ Completed",
+        statusLabel: "Completed",
         image: "Media/RVIZ IMAGE OF MODEL.jpeg",
         imageCaption: "RViz visualisation — 6-DOF arm model rendered with colour-coded links and joint transforms confirmed",
         intro: "With a working URDF in place, the arm was loaded into both Gazebo Harmonic (physics simulation) and RViz (kinematic visualisation). This simulation environment is the primary testbed for validating motion logic before deploying to real hardware.",
@@ -204,13 +213,13 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 7 — SERVO MOTOR CONTROL
+    // SLIDE 10 — SERVO MOTOR CONTROL
     // ─────────────────────────────────────────────
     {
         type: "process",
         title: "Phase 4 — Servo Motor Control (ESP8266)",
         status: "in-progress",
-        statusLabel: "🔄 In Progress",
+        statusLabel: "In Progress",
         intro: "Parallel to simulation work, initial development of the servo motor control firmware on the ESP8266 microcontroller has begun. This is the hardware-side counterpart to the simulated JointTrajectoryController.",
         steps: [
             {
@@ -233,13 +242,13 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 8 — COMPUTER VISION (YOLO)
+    // SLIDE 11 — COMPUTER VISION (YOLO)
     // ─────────────────────────────────────────────
     {
         type: "process",
         title: "Phase 5 — Computer Vision Integration (YOLO)",
         status: "in-progress",
-        statusLabel: "🔄 Under Development",
+        statusLabel: "Under Development",
         image: "Media/YOLO HAND DETECTION.jpg",
         imageCaption: "Live hand gesture recognition — 29.7 FPS, 21 landmark keypoints tracked in real time",
         intro: "A YOLO-based detection pipeline was developed and tested to detect a human hand in a camera feed and convert that detection into servo movement commands for the robotic arm. This module represents the core intelligence of the human-in-the-loop control mode.",
@@ -269,7 +278,7 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 9 — CHALLENGES & STATUS
+    // SLIDE 12 — CHALLENGES & STATUS
     // ─────────────────────────────────────────────
     {
         type: "challenges",
@@ -312,7 +321,7 @@ const SLIDES = [
     },
 
     // ─────────────────────────────────────────────
-    // SLIDE 10 — NEXT STEPS
+    // SLIDE 13 — NEXT STEPS
     // ─────────────────────────────────────────────
     {
         type: "roadmap",

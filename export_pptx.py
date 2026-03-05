@@ -302,8 +302,8 @@ process_slides_data_1 = [
 ]
 
 fullimage_slides = [
-    (r"c:\Users\NATRAJ\Desktop\PPT\Media\HARWARE REPRESENTAION.jpeg", 5),
-    (r"c:\Users\NATRAJ\Desktop\PPT\Media\ASSMEBLED.jpg", 6)
+    (r"c:\Users\NATRAJ\Desktop\PPT\Media\HARWARE REPRESENTAION.png", 5),
+    (r"c:\Users\NATRAJ\Desktop\PPT\Media\ASSMEBLED.jpeg", 6)
 ]
 
 process_slides_data_2 = [
@@ -325,7 +325,7 @@ process_slides_data_2 = [
     },
     {
         "num": 8, "title": "Phase 3 — Simulation in Gazebo & RViz", "status_label": "✅ Completed",
-        "image": r"c:\Users\NATRAJ\Desktop\PPT\Media\RVIZ IMAGE OF MODEL.png",
+        "image": r"c:\Users\NATRAJ\Desktop\PPT\Media\RVIZ IMAGE OF MODEL.jpeg",
         "intro": "With the URDF ready, the arm was loaded into Gazebo Harmonic (physics sim) and RViz (kinematic visualisation) as the primary testbed before hardware deployment.",
         "outcome": "Arm simulates correctly in Gazebo with physics-accurate joint motion. Trajectory commands execute reliably via ROS2 topics.",
         "steps": [

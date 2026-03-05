@@ -40,12 +40,53 @@
       --orange: #d2691e;
       --green: #2d6a4f;
 
+      --bg-grad-1: #c5bdb2;
+      --bg-grad-2: #d8d0c5;
+      --bg-grad-3: #ccc4b8;
+      --bg-grad-4: #bab2a8;
+
+      /* UI Elements */
+      --green-label: #27ae60;
+      --divider-color: rgba(0, 0, 0, 0.1);
+      --border-dash: rgba(0, 0, 0, 0.06);
+      --shadow-main: rgba(0, 0, 0, 0.06);
+      --shadow-inset: rgba(255, 255, 255, 0.4);
+
       --r: 14px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --mono: 'JetBrains Mono', 'Fira Code', monospace;
 
       /* Angular sidebar gradient */
       --side-grad: linear-gradient(160deg, #c8bfb0 0%, transparent 55%);
+    }
+
+    body.dark {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --panel: rgba(22, 27, 34, 0.90);
+      --panel2: rgba(48, 54, 31, 0.5);
+      --border: rgba(240, 246, 252, 0.15);
+      --border2: rgba(240, 246, 252, 0.1);
+      --dark: #f0f6fc;
+      --mid: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #79c0ff;
+      /* Brighter blue */
+      --accent2: #ff7b72;
+      /* Brighter red */
+      --accent3: #7ee787;
+      /* Brighter green */
+      --bg-grad-1: #161b22;
+      --bg-grad-2: #0d1117;
+      --bg-grad-3: #161b22;
+      --bg-grad-4: #0d1117;
+      --side-grad: linear-gradient(160deg, #161b22 0%, transparent 55%);
+
+      --green-label: #3fb950;
+      --divider-color: rgba(240, 246, 252, 0.15);
+      --border-dash: rgba(240, 246, 252, 0.2);
+      --shadow-main: rgba(0, 0, 0, 0.7);
+      --shadow-inset: rgba(255, 255, 255, 0.04);
     }
 
     html,
@@ -75,7 +116,7 @@
       top: 0;
       width: 22%;
       height: 100%;
-      background: linear-gradient(170deg, #c5bdb2 0%, #d8d0c5 40%, transparent 100%);
+      background: linear-gradient(170deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 40%, transparent 100%);
       clip-path: polygon(0 0, 100% 0, 72% 100%, 0 100%);
       pointer-events: none;
       z-index: 0;
@@ -87,7 +128,7 @@
       top: 0;
       width: 22%;
       height: 100%;
-      background: linear-gradient(190deg, transparent 0%, #ccc4b8 60%, #bab2a8 100%);
+      background: linear-gradient(190deg, transparent 0%, var(--bg-grad-3) 60%, var(--bg-grad-4) 100%);
       clip-path: polygon(28% 0, 100% 0, 100% 100%, 0 100%);
       pointer-events: none;
       z-index: 0;
@@ -273,12 +314,12 @@
       max-width: 820px;
       text-align: center;
       padding: 36px 52px 32px;
-      background: rgba(255, 255, 255, 0.65);
-      border: 1px solid rgba(90, 80, 65, 0.10);
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: 18px;
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+      box-shadow: 0 8px 40px var(--shadow-main), 0 0 0 1px var(--shadow-inset) inset;
       position: relative;
       overflow: hidden;
     }
@@ -338,7 +379,7 @@
     .cover-submitted-label {
       font-size: 11px;
       font-weight: 700;
-      color: #27ae60;
+      color: var(--green-label);
       letter-spacing: .8px;
       text-transform: uppercase;
       margin-bottom: 10px;
@@ -358,13 +399,18 @@
       padding: 5px 8px;
       color: var(--dark);
       font-weight: 500;
-      border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
+      border-bottom: 1px dashed var(--border-dash);
       transition: background .2s;
     }
 
     .cover-team-row:hover {
-      background: rgba(26, 107, 138, 0.04);
+      background: var(--accent);
       border-radius: 6px;
+      color: white;
+    }
+
+    .cover-team-row:hover .cover-team-reg {
+      color: rgba(255, 255, 255, 0.8);
     }
 
     .cover-team-row:last-child {
@@ -403,7 +449,7 @@
     .cover-divider {
       width: 50%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+      background: linear-gradient(90deg, transparent, var(--divider-color), transparent);
       margin: 12px auto;
     }
 
@@ -413,6 +459,10 @@
       margin: 6px auto 4px;
       display: block;
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    body.dark .cover-logo {
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5)) brightness(1.1);
     }
 
     .cover-dept {
@@ -810,10 +860,49 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 6px;
-      font-size: 22px;
+      padding: 0 4px;
       color: var(--accent);
-      opacity: .4;
+      width: 40px;
+    }
+
+    .flow-svg {
+      width: 24px;
+      height: 24px;
+      overflow: visible;
+    }
+
+    .flow-path {
+      stroke: var(--accent);
+      opacity: 0.25;
+    }
+
+    .flow-dot {
+      fill: var(--accent);
+      animation: flowAlong 4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    .flow-dot:nth-child(3) {
+      animation-delay: -2s;
+    }
+
+    @keyframes flowAlong {
+      0% {
+        transform: translateX(-12px);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(12px);
+        opacity: 0;
+      }
     }
 
     .fc-future {
@@ -880,9 +969,9 @@
     }
 
     .fc-mode-chip.autonomous {
-      background: rgba(249, 115, 22, .07);
-      color: #c2410c;
-      border: 1px solid rgba(249, 115, 22, .2);
+      background: rgba(210, 105, 30, .07);
+      color: var(--orange);
+      border: 1px solid rgba(210, 105, 30, .2);
     }
 
     /* ═══════════════════════════════════
@@ -927,7 +1016,7 @@
     }
 
     .drop-zone {
-      border: 2px dashed rgba(26, 107, 138, .22);
+      border: 2px dashed var(--border);
       border-radius: 14px;
       padding: 20px;
       text-align: center;
@@ -1246,7 +1335,7 @@
     }
 
     .stl-viewer:fullscreen {
-      background: #e5e0d8 !important;
+      background: var(--bg) !important;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1315,6 +1404,124 @@
       background: rgba(0, 0, 0, .12);
       border-radius: 4px;
     }
+
+    /* ═══════════════════════════════════
+   DOWNLOAD & FOOTER
+═══════════════════════════════════ */
+    .download-section {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: none;
+      cursor: pointer;
+    }
+
+    .dl-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      filter: brightness(1.1);
+    }
+
+    .dl-btn.pdf {
+      background: #c0392b;
+    }
+
+    .update-date {
+      position: fixed;
+      bottom: 20px;
+      right: 24px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      opacity: 0.7;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════
+   PRINT / PDF EXPORT
+═══════════════════════════════════ */
+    @media print {
+      @page {
+        size: landscape;
+        margin: 0;
+      }
+
+      body {
+        overflow: visible !important;
+        background: white !important;
+      }
+
+      #app,
+      #slides {
+        overflow: visible !important;
+        height: auto !important;
+        position: static !important;
+      }
+
+      .bg-left,
+      .bg-right,
+      .bg-top-stripe,
+      #top-nav,
+      #counter,
+      #hint,
+      #progress-bar,
+      .img-expand-hint,
+      .stl-hint,
+      .expand-btn,
+      .download-section {
+        display: none !important;
+      }
+
+      .slide {
+        position: relative !important;
+        inset: auto !important;
+        opacity: 1 !important;
+        transform: none !important;
+        display: flex !important;
+        page-break-after: always !important;
+        height: 100vh !important;
+        width: 100vw !important;
+        padding: 40px !important;
+        background: white !important;
+        pointer-events: all !important;
+        zoom: 0.9 !important;
+        /* Scale down slightly for print margins */
+      }
+
+      .stagger,
+      .stagger-child {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+
+      .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        background: white !important;
+      }
+
+      .stl-viewer {
+        background: #f5f5f5 !important;
+        border: 1px solid #ccc !important;
+      }
+    }
   </style>
 
   <!-- Three.js & Loaders -->
@@ -1330,11 +1537,18 @@
     <div class="bg-right"></div>
     <div id="slides"></div>
     <div id="top-nav">
+      <button class="nav-btn" id="themeBtn" title="Toggle Dark Mode">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
       <button class="nav-btn" id="prevBtn" title="Previous (←)">&#8592;</button>
       <button class="nav-btn" id="nextBtn" title="Next (→)">&#8594;</button>
     </div>
     <div id="counter">1 / 13</div>
     <div id="hint">← → to navigate &nbsp;·&nbsp; F11 fullscreen</div>
+    <div class="update-date">Review Update: 06/03/2026</div>
     <div id="slide-num"></div>
     <div id="progress-bar"></div>
   </div>
@@ -1374,12 +1588,12 @@
 
     function getAbstractIcon(iconName) {
       const icons = {
-        '🎯': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
-        '🏗️': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
-        '📊': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
-        '🔬': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 1 1-4 0V7a2 2 0 1 1 4 0v5Z"/><path d="M12 7v4"/></svg>`
+        'goal': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+        'architecture': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
+        'progress': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+        'significance': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 1 1-4 0V7a2 2 0 1 1 4 0v5Z"/><path d="M12 7v4"/></svg>`
       };
-      return icons[iconName] || iconName;
+      return icons[iconName] || `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
     }
 
     function renderAbstract(s) {
@@ -1420,7 +1634,15 @@
 
     function statusBadge(status, label) {
       const cls = status === 'completed' ? 'green' : status === 'in-progress' ? 'orange' : 'teal';
-      return `<span class="badge ${cls}">${label}</span>`;
+      let icon = '';
+      if (status === 'completed') {
+        icon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>`;
+      } else if (status === 'in-progress') {
+        icon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M21 12a9 9 0 1 1-6.21-8.58"/><path d="M22 2v6h-6"/></svg>`;
+      } else {
+        icon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+      }
+      return `<span class="badge ${cls}">${icon}${label}</span>`;
     }
 
     function renderFullImage(s) {
@@ -1451,9 +1673,9 @@
       } else if (s.stl) {
         mediaCol = `
           <div class="process-image-col">
-            <div class="stl-viewer card" data-stl="${s.stl}" style="width:100%; height:300px; background:#e5e0d8; position:relative; overflow:hidden; cursor:grab; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,.08);">
+            <div class="stl-viewer card" data-stl="${s.stl}" style="width:100%; height:300px; background:var(--bg2); position:relative; overflow:hidden; cursor:grab; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,.08);">
                <div class="stl-hint">3D Interactive Viewer</div>
-               <button class="expand-btn" onclick="toggleFullscreen(this, event)">⛶ Expand</button>
+               <button class="expand-btn" onclick="toggleFullscreen(this, event)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="m15 3 6 6M9 21l-6-6M21 3l-6 6M3 21l6-6"/></svg>Expand</button>
             </div>
             ${s.stlCaption ? `<div class="process-img-caption">${s.stlCaption}</div>` : ''}
             ${outcomeHtml}
@@ -1504,19 +1726,25 @@
           <div class="fc-node input"><span class="fc-node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 21h10M12 17v4"/></svg></span><div>Camera Feed</div><div class="fc-node-sub">Webcam / USB</div></div>
           <div class="fc-node input"><span class="fc-node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span><div>IMU Sensor</div><div class="fc-node-sub">MPU6050 · 6-axis</div></div>
         </div>
-        <div class="fc-arrow-col">→</div>
+        <div class="fc-arrow-col">
+          <svg class="flow-svg" viewBox="0 0 24 24"><path class="flow-path" d="M2 12h20M22 12l-6-6M22 12l-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="flow-dot" cx="12" cy="12" r="2.5"/><circle class="flow-dot" cx="12" cy="12" r="2.5" style="animation-delay:-1s;"/></svg>
+        </div>
         <div class="fc-col">
           <div class="fc-col-label">Detection</div>
           <div class="fc-node process"><span class="fc-node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2m2 0h2m2 0h2"/><path d="M7 12h4m2 0h4"/></svg></span><div>YOLOv8 Pipeline</div><div class="fc-node-sub">Hand + Object Detect</div></div>
           <div class="fc-node process"><span class="fc-node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10c0 4-6 9-6 9s-6-5-6-9a6 6 0 0 1 12 0z"/><circle cx="12" cy="10" r="2"/></svg></span><div>Gesture Mapping</div><div class="fc-node-sub">Coords → Joint Angles</div></div>
         </div>
-        <div class="fc-arrow-col">→</div>
+        <div class="fc-arrow-col">
+          <svg class="flow-svg" viewBox="0 0 24 24"><path class="flow-path" d="M2 12h20M22 12l-6-6M22 12l-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="flow-dot" cx="12" cy="12" r="2.5"/><circle class="flow-dot" cx="12" cy="12" r="2.5" style="animation-delay:-1s;"/></svg>
+        </div>
         <div class="fc-col">
           <div class="fc-col-label">Control Hub</div>
           <div class="fc-node control"><span class="fc-node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></span><div>ROS2 Jazzy</div><div class="fc-node-sub">Gazebo + MoveIt2</div></div>
           <div class="fc-node control"><span class="fc-node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span><div>ESP8266 MCU</div><div class="fc-node-sub">WiFi · PWM Bridge</div></div>
         </div>
-        <div class="fc-arrow-col">→</div>
+        <div class="fc-arrow-col">
+          <svg class="flow-svg" viewBox="0 0 24 24"><path class="flow-path" d="M2 12h20M22 12l-6-6M22 12l-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="flow-dot" cx="12" cy="12" r="2.5"/></svg>
+        </div>
         <div class="fc-col">
           <div class="fc-col-label">Actuation</div>
           <div class="fc-node output"><span class="fc-node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M16.24 7.76a6 6 0 0 1 0 8.48M7.76 7.76a6 6 0 0 0 0 8.48"/></svg></span><div>6× MG996R</div><div class="fc-node-sub">Servo Motors</div></div>
@@ -1527,11 +1755,11 @@
         <div class="fc-future-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Future Expansion</div>
         <div class="fc-future-nodes">
           <div class="fc-future-node"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>MQTT Protocol</div>
-          <span class="fc-future-arrow">→</span>
+          <span class="fc-future-arrow" style="display:inline-flex;align-items:center;width:30px;opacity:0.6;"><svg viewBox="0 0 24 24" style="width:100%;"><path d="M2 12h20M22 12l-6-6M22 12l-6 6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle class="flow-dot" cx="12" cy="12" r="3" style="animation-duration:2.5s"/><circle class="flow-dot" cx="12" cy="12" r="3" style="animation-duration:2.5s;animation-delay:-1.25s"/></svg></span>
           <div class="fc-future-node"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Raspberry Pi</div>
-          <span class="fc-future-arrow">→</span>
+          <span class="fc-future-arrow" style="display:inline-flex;align-items:center;width:30px;opacity:0.6;"><svg viewBox="0 0 24 24" style="width:100%;"><path d="M2 12h20M22 12l-6-6M22 12l-6 6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle class="flow-dot" cx="12" cy="12" r="3" style="animation-duration:2.5s"/><circle class="flow-dot" cx="12" cy="12" r="3" style="animation-duration:2.5s;animation-delay:-1.25s"/></svg></span>
           <div class="fc-future-node"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Remote Dashboard</div>
-          <span class="fc-future-arrow">→</span>
+          <span class="fc-future-arrow" style="display:inline-flex;align-items:center;width:30px;opacity:0.6;"><svg viewBox="0 0 24 24" style="width:100%;"><path d="M2 12h20M22 12l-6-6M22 12l-6 6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle class="flow-dot" cx="12" cy="12" r="3" style="animation-duration:2.5s"/><circle class="flow-dot" cx="12" cy="12" r="3" style="animation-duration:2.5s;animation-delay:-1.25s"/></svg></span>
           <div class="fc-future-node"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Mobile Control</div>
         </div>
       </div>
@@ -1578,7 +1806,7 @@
     <p class="slide-subtitle stagger">${s.subtitle}</p>
     <div class="challenges-grid stagger">${col(s.hardwareTrack)}${col(s.softwareTrack)}</div>
     <div class="key-challenge stagger">
-      <div class="kc-label">⚠️ Key Challenge</div>${s.keyChallenge}
+      <div class="kc-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Key Challenge</div>${s.keyChallenge}
     </div>
   </div>`;
     }
@@ -1609,6 +1837,18 @@
     <div class="thankyou-line stagger"></div>
     <div class="thankyou-title stagger">${s.title}</div>
     <div class="thankyou-subtitle stagger" style="color:var(--accent)">Thank you for your time and attention.</div>
+    
+    <div class="download-section stagger">
+      <a href="presentation.pptx" download class="dl-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PPTX
+      </a>
+      <a href="presentation.pdf" download class="dl-btn pdf">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Download PDF
+      </a>
+    </div>
+
     <div class="thankyou-line stagger"></div>
   </div>`;
     }
@@ -1656,6 +1896,37 @@
     goTo(0);
     document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
     document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+
+    // ─── THEME TOGGLE ─────────────────────────────────────────
+    const themeBtn = document.getElementById('themeBtn');
+    const themeIcon = document.getElementById('theme-icon');
+
+    function updateThemeIcon() {
+      if (document.body.classList.contains('dark')) {
+        themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+      } else {
+        themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+      }
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+      updateThemeIcon();
+    }
+
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcon();
+
+      // Update STL viewers background and model colors
+      document.querySelectorAll('.stl-viewer').forEach(container => {
+        if (container._mesh) {
+          container._mesh.material.color.setHex(isDark ? 0x9a8e80 : 0x5a5148);
+        }
+      });
+    });
     document.addEventListener('keydown', e => {
       if (document.fullscreenElement) {
         if (e.key === 'Escape') document.exitFullscreen();
@@ -1720,12 +1991,13 @@
       loader.load(file, geometry => {
         if (stlHint) stlHint.textContent = '3D Model Active (Drag to Rotate)';
         const material = new THREE.MeshPhongMaterial({
-          color: 0x5a5148,
+          color: document.body.classList.contains('dark') ? 0x9a8e80 : 0x5a5148,
           specular: 0x222222,
           shininess: 60,
           flatShading: false
         });
         const mesh = new THREE.Mesh(geometry, material);
+        container._mesh = mesh; // Store for theme switching
 
         geometry.computeBoundingBox();
         geometry.center();
