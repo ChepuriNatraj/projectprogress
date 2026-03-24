@@ -148,7 +148,7 @@ const SLIDES = [
         title: "Phase 2 — 3D Model & URDF Development",
         status: "completed",
         statusLabel: "Completed (Iterative Adaptation)",
-        stl: "full_assembly.stl",
+        stl: "models/full_assembly.stl",
         stlCaption: "Interactive 3D representation of the assembled CAD model (Drag to rotate, Scroll to zoom)",
         intro: "A robot description file (URDF) is mandatory for simulation in Gazebo and visualisation in RViz. Because no pre-existing URDF matched our exact arm hardware, one had to be created from scratch using an adapted reference.",
         steps: [
